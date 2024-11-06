@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Welcome to the Bookstore</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+    body {
+        font-family: 'Roboto', sans-serif; /* Set the font for the page */
+        text-align: center;
+        color: #fff; /* White text color */
+        background-image: url('/images/OpenBooksOnGrass.jpg'); /* Set a background image */
+        background-size: cover; /* Make the image cover the whole page */
+        background-position: center; /* Center the image */
+        background-attachment: fixed; /* Keeps the image fixed while scrolling */
+        margin: 0;
+        padding: 0;
+        height: 100vh; /* Full viewport height */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 3.5em; /* Large title */
+        font-weight: 700;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background for readability */
+        padding: 15px 30px;
+        border-radius: 10px; /* Rounded corners */
+        z-index: 2;
+        box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.7); /* Soft shadow */
+        letter-spacing: 1px; /* Space between letters */
+    }
+
+    .button {
+        display: inline-block;
+        padding: 12px 30px; /* Padding for the button */
+        font-size: 1.1em;
+        font-weight: 500;
+        color: #fff; /* White text color */
+        background-color: #4a90e2; /* Blue background color */
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition on hover */
+        z-index: 2;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4); /* Button shadow */
+    }
+
+    .button:hover {
+        background-color: #357ABD; /* Darker blue on hover */
+        transform: scale(1.05); /* Slightly bigger on hover */
+    }
+
+    .signup-button,
+    .login-button {
+        position: absolute;
+        top: 20px;
+        font-size: 1em;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .signup-button {
+        right: 20px; /* Place button on the right side */
+        background-color: #f26c4f; /* Orange color for sign up */
+        width: 120px; /* Width for sign-up button */
+    }
+
+    .signup-button:hover {
+        background-color: #d45c3f; /* Darker orange on hover */
+    }
+
+    .login-button {
+        right: calc(20px + 120px + 0.5cm); /* Offset from sign-up button */
+        background-color: #f26c4f;
+        width: 100px; /* Width for login button */
+    }
+
+    .login-button:hover {
+        background-color: #d45c3f; /* Darker orange on hover */
+    }
+
+    /* Popup styling for sign-up and login forms */
+    .popup {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        width: 300px; /* Width of popup */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        z-index: 3;
+    }
+
+    .popup h2 {
+        font-size: 1.5em;
+        color: #333; /* Dark text color */
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .popup input[type="text"],
+    .popup input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .popup .action-button {
+        width: 100%; /* Full-width button */
+        padding: 10px;
+        font-size: 1em;
+        font-weight: bold;
+        color: #fff;
+        background-color: #4a90e2;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .popup .action-button:hover {
+        background-color: #357ABD;
+    }
+
+    .popup .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.2em;
+        color: #333;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-weight: bold;
+    }
+
+    .popup .close-button:hover {
+        color: #f26c4f;
+    }
+
+    /* Dimmed background overlay when popup is open */
+    .overlay {
+        display: none; /* Hidden initially */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%; /* Covers full screen */
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+        z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+<div id="mainContent">
+  <h1>Welcome to the Bookstore!</h1>
+  <a href="/books" class="button">Check our Inventory</a> <!-- Link to inventory page -->
+  <button class="login-button" onclick="openLogin()">Login</button> <!-- Opens login popup -->
+  <button class="signup-button" onclick="openSignup()">Sign Up</button> <!-- Opens sign-up popup -->
+</div>
+
+<div id="overlay" class="overlay" onclick="closePopup()"></div> <!-- Overlay for background dimming -->
+
+<!-- Sign Up Popup -->
+<div id="signupPopup" class="popup">
+  <button class="close-button" onclick="closePopup()">×</button> <!-- Close button in popup -->
+  <h2>Sign Up</h2> <!-- Title for sign-up popup -->
+  <input type="text" id="firstName" placeholder="First Name">
+  <input type="text" id="lastName" placeholder="Last Name">
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button class="action-button" onclick="registerUser()">Register</button> <!-- Button to submit registration -->
+</div>
+
+<!-- Login Popup -->
+<div id="loginPopup" class="popup">
+  <button class="close-button" onclick="closePopup()">×</button> <!-- Close button for login -->
+  <h2>Login</h2> <!-- Title for login popup -->
+  <input type="text" id="loginUsername" placeholder="Username">
+  <input type="password" id="loginPassword" placeholder="Password">
+  <button class="action-button" onclick="loginUser()">Login</button> <!-- Button to submit login -->
+</div>
+
+<script>
+  function openSignup() {
+      closePopup(); // Make sure to close any open popups first
+      document.getElementById("signupPopup").style.display = "block"; // Show sign-up popup
+      document.getElementById("overlay").style.display = "block"; // Show overlay
+      clearFormFields(); // Reset the fields
+  }
+
+  function openLogin() {
+      closePopup(); // Close other popups first
+      document.getElementById("loginPopup").style.display = "block"; // Show login popup
+      document.getElementById("overlay").style.display = "block"; // Show overlay
+      clearLoginFields(); // Clear login fields
+  }
+
+  function closePopup() {
+      document.getElementById("signupPopup").style.display = "none"; // Hide sign-up popup
+      document.getElementById("loginPopup").style.display = "none"; // Hide login popup
+      document.getElementById("overlay").style.display = "none"; // Hide overlay
+  }
+
+  function clearFormFields() {
+      document.getElementById("firstName").value = ""; // Clear first name field
+      document.getElementById("lastName").value = ""; // Clear last name field
+      document.getElementById("username").value = ""; // Clear username field
+      document.getElementById("password").value = ""; // Clear password field
+  }
+
+  function clearLoginFields() {
+      document.getElementById("loginUsername").value = ""; // Clear username field for login
+      document.getElementById("loginPassword").value = ""; // Clear password field for login
+  }
+
+  function registerUser() {
+      const firstName = document.getElementById("firstName").value;
+      const lastName = document.getElementById("lastName").value;
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      fetch("/register", { // Sends registration data to the server
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ firstName, lastName, username, password }) // Convert data to JSON
+      })
+      .then(response => response.json())
+      .then(data => {
+          alert(data.message); // Show server message
+          if (data.success) {
+              closePopup(); // Close popup on successful registration
+          }
+      })
+      .catch(error => {
+          console.error("Error:", error); // Log any errors
+      });
+  }
+
+  function loginUser() {
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+
+      fetch("/login", { // Sends login data to the server
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username, password }) // Convert login data to JSON
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              window.location.href = "/books"; // Redirect to books page on successful login
+          } else if (data.message === "No such account exists") {
+              alert(data.message); // Show message for non-existent account
+              closePopup(); // Close popup
+              openSignup(); // Open sign-up popup
+          } else {
+              alert(data.message); // Show other messages
+          }
+      })
+      .catch(error => {
+          console.error("Error:", error); // Log any errors
+      });
+  }
+</script>
+</body>
+</html>

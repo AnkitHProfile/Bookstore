@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bookstore Inventory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9; /* light background for the page */
+        }
+
+        /* Styling for the header at the top */
+        .header {
+            display: flex;
+            justify-content: flex-end; /* aligns items to the right */
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #4CAF50; /* green background for header */
+            color: white;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow effect */
+        }
+
+        /* Button styling */
+        .header .button {
+            padding: 8px 16px;
+            font-size: 16px;
+            color: #4CAF50; /* make button text green */
+            background-color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s; /* smooth hover transition */
+            margin-left: 10px;
+        }
+
+        .header .button:hover {
+            background-color: #45a049; /* hover color */
+            color: white;
+        }
+
+        /* Styling the title */
+        h2 {
+            text-align: center; /* center the title */
+            color: #333;
+            margin-top: 10px;
+        }
+
+        /* Main table styling */
+        table {
+            width: 90%;
+            margin: 20px auto; /* centers the table */
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* light border around cells */
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #add8e6; /* light blue header row */
+            color: black;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* alternate row background */
+        }
+
+        /* Center the table and give it some spacing from the header */
+        .content {
+            padding-top: 20px;
+        }
+
+        /* Form styling */
+        .new-book-form {
+            width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #ffffff; /* white form background */
+            border-radius: 5px;
+        }
+
+        .new-book-form input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .new-book-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* smooth transition */
+        }
+
+        .new-book-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="/bookstore" th:if="${session.loggedIn == null}" class="button">Back</a>
+    <a href="/logout" th:if="${session.loggedIn != null}" class="button">Logout</a>
+</div>
+
+<div class="content">
+    <h2>Bookstore Inventory</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Authors</th>
+            <th>Edition</th>
+            <th>Price</th>
+            <th>Status</th>
+            <!-- Only show "Actions" column if user is logged in -->
+            <th th:if="${session.loggedIn != null}">Actions</th>
+        </tr>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.id}">1</td>
+            <td th:text="${book.isbn}">978-0000000000</td>
+            <td th:text="${book.title}">Sample Title</td>
+            <td th:text="${book.authors}">Sample Author</td>
+            <td th:text="${book.edition}">1st</td>
+            <td th:text="${book.price}">20.00</td>
+            <td th:text="${book.status}">AVAILABLE</td>
+            <!-- Only show Buy/Sell buttons if user is logged in -->
+            <td th:if="${session.loggedIn != null}">
+                <button th:onclick="'buyBook(' + ${book.id} + ')'" class="button">Buy</button>
+                <button th:onclick="'sellBook(' + ${book.id} + ')'" class="button">Sell</button>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Only show the Sell New Book form if user is logged in -->
+    <div th:if="${session.loggedIn != null}">
+        <h2>Sell a New Book</h2>
+        <div class="new-book-form">
+            <input type="text" id="isbn" placeholder="ISBN" required>
+            <input type="text" id="title" placeholder="Title" required>
+            <input type="text" id="authors" placeholder="Authors" required>
+            <input type="text" id="edition" placeholder="Edition" required>
+            <input type="number" id="price" placeholder="Price" required>
+            <button onclick="sellNewBook()">Sell New Book</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function buyBook(bookId) {
+        fetch(`/books/buy/${bookId}`, {
+            method: 'POST'
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            location.reload(); // Reload the page to reflect changes
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function sellBook(bookId) {
+        fetch(`/books/sell/${bookId}`, {
+            method: 'POST'
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            location.reload(); // Reload the page to reflect changes
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function sellNewBook() {
+        const isbn = document.getElementById('isbn').value;
+        const title = document.getElementById('title').value;
+        const authors = document.getElementById('authors').value;
+        const edition = document.getElementById('edition').value;
+        const price = parseFloat(document.getElementById('price').value);
+
+        const book = { isbn, title, authors, edition, price };
+
+        fetch('/books/sell', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(book)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("New book added to inventory!");
+            location.reload(); // Reload the page to reflect the new book
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>

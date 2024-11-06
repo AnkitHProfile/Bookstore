@@ -1,0 +1,85 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Build Files
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Sensitive Files
+application.properties
+*.env
+
+# Logs
+*.log
+*.out
+*.err
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Compiled Files
+*.class
+*.jar
+*.war
+*.ear
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse/STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# VS Code
+.vscode/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Windows
+*.exe
+*.dll
+*.sys
+
+# macOS
+.DS_Store
+._*
+
+# Linux
+*.swp
+*.swo
+*~
+
+# Generated Files
+*.generated
+
+# Dependency Directory
+node_modules/
+
+# Python Cache
+__pycache__/
+
+# Java Temporary Files
+*.tmp
+*.bak
+
+# Git Specific
+.git/
