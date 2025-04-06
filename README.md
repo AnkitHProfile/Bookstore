@@ -1,68 +1,101 @@
--- Bookstore Inventory Management System Overview
-The Bookstore Inventory Management System is a full-stack web application designed to streamline textbook inventory operations. It enables users to browse available books, purchase textbooks, sell back used books, and manage inventory efficiently. The project incorporates modern web development practices and design patterns to ensure scalability, modularity, and maintainability.
+# 📚 Bookstore Inventory Management System
 
--- Features
-1. User Authentication:
-Secure login and sign-up functionality with session management.
-2. Textbook Inventory:
-Browse available textbooks with dynamic filtering.
-View detailed information about each book, including ISBN, title, authors, edition, and price.
-3. Buying and Selling:
-Buy books from the inventory, with automatic price depreciation by 10%.
-Sell back used books or add new books to the inventory.
-4. Session-Specific Actions:
-Logout and Back buttons visible based on user login status.
-Restricted actions (e.g., buy/sell) for non-logged-in users.
+The **Bookstore Inventory Management System** is a full-stack web application built using **Spring Boot**, **PostgreSQL**, and **Thymeleaf**. It enables users to browse, purchase, and sell textbooks, with a focus on clean architecture and maintainable code through design patterns like **Factory** and **Adapter**.
 
--- Technical Details
-1. Backend Framework:
-Spring Boot: Used for creating RESTful APIs and handling business logic.
-2. Frontend:
-Thymeleaf: For rendering dynamic web pages and templates.
-3. Database:
-PostgreSQL: Used for storing and managing book and user data.
-4. Design Patterns:
-Factory Pattern: For creating different book objects based on their status (available, sold, resold).
-Adapter Pattern: To transform book entities into lightweight resources for frontend consumption.
-5. Security:
-Session-based authentication and authorization.
+---
 
--- Prerequisites
-1. Java JDK 21 or higher installed.
-2. PostgreSQL installed and configured.
-3. Maven installed for dependency management.
-4. An IDE or text editor (e.g., IntelliJ IDEA, VS Code).
+## 🚀 Features
 
--- Setup Instructions
-A. Clone the repository:
+- **User Authentication**: Secure login and sign-up with session handling.
+- **Inventory Management**: Browse textbooks with filters and detailed info (ISBN, author, edition, price).
+- **Buy & Sell Operations**:
+  - Buy books with automatic 10% price depreciation.
+  - Sell used books or add new books to inventory.
+- **Session Awareness**: Logout/Back buttons shown only when logged in; restricted access for guests.
+
+---
+
+## ⚙️ Tech Stack
+
+| Layer     | Technology                        |
+|-----------|-----------------------------------|
+| Backend   | Spring Boot (RESTful API)         |
+| Frontend  | Thymeleaf (HTML templating)       |
+| Database  | PostgreSQL                        |
+| Patterns  | Factory & Adapter Design Patterns |
+| Security  | Session-based Authentication      |
+
+---
+
+## 🛠️ Prerequisites
+
+- Java JDK 21 or higher
+- PostgreSQL installed and running
+- Maven installed
+- IDE like IntelliJ IDEA or VS Code
+
+---
+
+## 📦 Setup Instructions
+
+### 1. Clone the repository
+
+```bash
 git clone https://github.com/your-username/bookstore.git
 cd bookstore
+```
 
--- Configure the database:
-1. Open application.properties in the src/main/resources folder.
-2. Update the following values with your PostgreSQL credentials:
+### 2. Configure the database
+
+Edit `src/main/resources/application.properties` and update the values with your PostgreSQL credentials:
+
+```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/bookstore
 spring.datasource.username=your-username
 spring.datasource.password=your-password
 
--- Build and run the application:
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+server.port=8081
+```
+
+> 📌 Replace `your-username` and `your-password` with your actual PostgreSQL credentials.
+
+### 3. Build and run the application
+
+```bash
 mvn clean install
 mvn spring-boot:run
+```
 
--- Access the application:
-Navigate to http://localhost:8081 in your browser.
+### 4. Access the app
 
--- API Endpoints
-/bookstore (GET) - Displays the welcome page.
-/books (GET) - Shows the book inventory page.
-/books/api (GET) - Returns all books as JSON.
-/books/buy/{id}	(POST) - Buys a book by its ID.
-/books/sell/{id}	(POST) - Sells a used book by its ID.
-/books/sell	(POST) - Adds a new book to the inventory.
-/register	(POST) - Registers a new user.
-/login (POST) - Logs in an existing user.
-/logout	(GET) - Logs out the current user.
+Open your browser and navigate to:  
+[http://localhost:8081](http://localhost:8081)
 
+---
+
+## 📡 API Endpoints
+
+| Endpoint                  | Method | Description                        |
+|---------------------------|--------|------------------------------------|
+| `/bookstore`              | GET    | Displays the welcome page          |
+| `/books`                  | GET    | Shows book inventory               |
+| `/books/api`              | GET    | Returns all books as JSON          |
+| `/books/buy/{id}`         | POST   | Buys a book by ID                  |
+| `/books/sell/{id}`        | POST   | Sells a used book by ID            |
+| `/books/sell`             | POST   | Adds a new book to the inventory   |
+| `/register`               | POST   | Registers a new user               |
+| `/login`                  | POST   | Logs in an existing user           |
+| `/logout`                 | GET    | Logs out the current user          |
+
+---
+
+## 📁 Project Structure
+
+```
 Bookstore/
 ├── src/
 │   ├── main/
@@ -80,14 +113,24 @@ Bookstore/
 │   │   │   ├── UserAdapter.java
 │   │   │   ├── UserRepository.java
 │   │   │   ├── UserResource.java
-│   │   ├── resources/
-│   │       ├── application.properties
-│   │       ├── templates/
-│   │           ├── books.html
-│   │           ├── welcome.html
+│   ├── resources/
+│   │   ├── application.properties
+│   │   ├── templates/
+│   │   │   ├── books.html
+│   │   │   ├── welcome.html
 ├── .gitignore
 ├── README.md
+```
 
--- Contributors
-Your Name – Ankit Hiremath
-GitHub - https://github.com/AnkitHProfile
+---
+
+## 👨‍💻 Contributor
+
+**Ankit Hiremath**  
+GitHub: [AnkitHProfile](https://github.com/AnkitHProfile)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
